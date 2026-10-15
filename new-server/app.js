@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -7,6 +8,8 @@ app.get('/', (req, res) => {
     res.send('New Server is Starts...')
 })
 
+app.use(cors());
+app.use(express.json())
 
 const usersData = [
     {id: 1, name: "Oyshi", dept: "English"},
@@ -16,9 +19,15 @@ const usersData = [
 ]
 
 
-
 app.get('/users', (req, res) => {
     res.send(usersData)
+})
+
+app.post('/users', (req, res) => {
+    const newUser = req.body;
+    newUser.id = usersData.length + 1;
+    usersData.push(newUser)
+    res.send({success: true, message: 'User added successfully!'})
 })
 
 app.listen(PORT, () => {
